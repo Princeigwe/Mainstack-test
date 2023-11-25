@@ -20,4 +20,13 @@ export class UsersService {
     user.save()
     return user
   }
+
+
+  async getUserByEmail(email: string) {
+    const user = await this.userModel.findOne({ email: email })
+    if (!user) {
+      throw new NotFoundException("User does not exist")
+    }
+    return user
+  }
 }

@@ -17,4 +17,30 @@ export class AuthService {
     let registeredUser = await this.usersService.createUser(first_name, last_name, email, username, hashedPassword)
     return registeredUser
   }
+
+
+  async getAuthenticatedUser(email: string, password: string) {
+    const user = await this.usersService.getUserByEmail(email)
+    const userHashedPassword = user.password
+    const validPassword = bcrypt.compare(password, userHashedPassword)
+    if (validPassword) {
+      return user
+    }
+    else {
+      throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST)
+    }
+  }
+
+
+  async createJwt(userId: string, first_name: string, last_name: string, email: string, username: string) {
+    const payload = {
+      userId: userId,
+      first_name: first_name,
+      last_name: last_name,
+      email: email,
+      username: username
+    }
+    const token = this.jwtService.sign(payload)
+    return token
+  }
 }

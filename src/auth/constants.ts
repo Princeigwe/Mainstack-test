@@ -1,3 +1,5 @@
+import { ConfigModule } from "@nestjs/config"
 export const jwtConstants = {
-    secret: process.env.JWT_SECRET
+  config: ConfigModule.forRoot(),
+  secret: process.env.JWT_SECRET
 }
