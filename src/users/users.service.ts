@@ -29,4 +29,12 @@ export class UsersService {
     }
     return user
   }
+
+  async getUserByPayloadUserEmail(email: string) {
+    const user = await this.userModel.findOne({ email: email })
+    if (!user) {
+      throw new HttpException("Invalid request by non-existing user", HttpStatus.BAD_REQUEST)
+    }
+    return user
+  }
 }

@@ -20,6 +20,7 @@ export class AuthController {
   async login(@Request() request, @Response() response) {
     const user = request.user
     const token = await this.authService.createJwt(user.id, user.first_name, user.last_name, user.email, user.username)
-    return response.send({ ...user.toObject(), accessToken: token });
+    response.setHeader("Set-Cookie", `jwt=${token}; HttpOnly`)
+    return response.send(user);
   }
 }
