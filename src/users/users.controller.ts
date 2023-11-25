@@ -13,8 +13,6 @@ export class UsersController {
   @Get('me')
   async myProfile(@Request() request) {
     const user = request.user
-    return {
-      message: `My profile, ${user.username}`
-    }
+    return await this.usersService.myProfile(user)
   }
 }

@@ -37,4 +37,18 @@ export class UsersService {
     }
     return user
   }
+
+
+  async myProfile(user: User) {
+    const currentUser = await this.userModel.findOne({ email: user.email })
+    return {
+      message: "My Profile",
+      data: {
+        first_name: currentUser.first_name,
+        last_name: currentUser.last_name,
+        email: currentUser.email,
+        username: currentUser.username
+      }
+    }
+  }
 }
