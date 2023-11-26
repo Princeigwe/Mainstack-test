@@ -25,4 +25,26 @@ export class ProductsService {
       data: product
     }
   }
+
+
+  async getProductByVendor(product_id: string) {
+    const product = await this.productModel.findById(product_id)
+    return product
+  }
+
+
+  async editProduct(user: User, product_id: string, title?: string, description?: string, price?: number, is_available?: boolean) {
+    const currentUser = await this.usersService.getUserByEmail(user.email)
+    const product = await this.productModel.findOne({ _id: product_id, vendor: currentUser._id })
+    if (!product) {
+      throw new HttpException("Invalid request", HttpStatus.BAD_REQUEST)
+    }
+    const query = { '_id': product._id, 'vendor': currentUser._id}
+    const updateData = {'$set': { title: title, description: description, price: price, is_available: is_available }}
+    await this.productModel.updateOne(query, updateData)
+    return {
+      message: "Product Updated",
+      data: await this.getProductByVendor(product._id)
+    }
+  }
 }
