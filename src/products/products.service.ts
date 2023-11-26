@@ -47,4 +47,28 @@ export class ProductsService {
       data: await this.getProductByVendor(product._id)
     }
   }
+
+
+  async getMyProducts(user: User, is_available?: boolean) {
+    const currentUser = await this.usersService.getUserByEmail(user.email)
+    if (is_available) {
+
+      let myProducts = await this.productModel.find({ 'is_available': is_available, 'vendor': currentUser._id })
+      return {
+        message: "My Products",
+        data: myProducts
+      }
+
+    }
+    else {
+      let myProducts = await this.productModel.find({'vendor': currentUser._id})
+      if (!myProducts.length) {
+        throw new HttpException("Empty store", HttpStatus.NOT_FOUND)
+      }
+      return {
+        message: "My Products",
+        data: myProducts
+      }
+    }
+  }
 }

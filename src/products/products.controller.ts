@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Request, UseGuards, Patch, Param } from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards, Patch, Param, Query, Get } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guards';
 import { AddProductDto } from './dtos/add.product.dto';
 import { EditProductDto } from './dtos/edit.prpduct.dto';
@@ -25,4 +25,13 @@ export class ProductsController {
     const user = request.user
     return await this.productsService.editProduct(user, product_id, body.title, body.description, body.price, body.is_available)
   }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('my-products')
+  async getMyProducts(@Request() request, @Query('is_available') is_available?: boolean ) {
+    const user = request.user
+    return await this.productsService.getMyProducts(user, is_available)
+  }
+
 }
