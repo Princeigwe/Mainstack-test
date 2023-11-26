@@ -27,8 +27,12 @@ export class ProductsService {
   }
 
 
-  async getProductByVendor(product_id: string) {
-    const product = await this.productModel.findById(product_id)
+  async getProductByVendor(product_id: string, user: User) {
+    const currentUser  = await this.usersService.getUserByEmail(user.email)
+    const product = await this.productModel.findOne({ '_id': product_id, 'vendor': currentUser._id })
+    if (!product) {
+      throw new HttpException("Product not found", HttpStatus.NOT_FOUND)
+    }
     return product
   }
 
@@ -44,7 +48,7 @@ export class ProductsService {
     await this.productModel.updateOne(query, updateData)
     return {
       message: "Product Updated",
-      data: await this.getProductByVendor(product._id)
+      data: await this.getProductByVendor(product._id, currentUser)
     }
   }
 
@@ -71,4 +75,25 @@ export class ProductsService {
       }
     }
   }
+
+
+  async deleteMyProducts() { }
+  
+
+  async deleteMyProduct(product_id: string, user: User) { 
+    const currentUser = await this.usersService.getUserByEmail(user.email)
+    await this.productModel.deleteOne({ '_id': product_id, 'vendor': currentUser._id })
+    return {
+      statusCode: HttpStatus.NO_CONTENT,
+      message: "Product deleted"
+    }
+  }
+  
+
+  async getProductsByBuyer() {
+    
+  }
+
+
+  async getProductByBuyer(){}
 }

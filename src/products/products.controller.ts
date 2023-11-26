@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Request, UseGuards, Patch, Param, Query, Get } from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards, Patch, Param, Query, Get, Delete } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guards';
 import { AddProductDto } from './dtos/add.product.dto';
 import { EditProductDto } from './dtos/edit.prpduct.dto';
 import { ProductsService } from './products.service';
+import { use } from 'passport';
 
 @Controller('products')
 export class ProductsController {
@@ -32,6 +33,21 @@ export class ProductsController {
   async getMyProducts(@Request() request, @Query('is_available') is_available?: boolean ) {
     const user = request.user
     return await this.productsService.getMyProducts(user, is_available)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('my-products/:product_id')
+  async getProductByVendor(@Param('product_id') product_id: string, @Request() request) {
+    const user = request.user
+    return await this.productsService.getProductByVendor(product_id, user)
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('my-products/:product_id')
+  async deleteMyProduct(@Param('product_id') product_id: string, @Request() request) {
+    const user = request.user
+    return await this.productsService.deleteMyProduct(product_id, user)
   }
 
 }
