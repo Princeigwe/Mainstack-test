@@ -11,6 +11,10 @@ export class ProductsController {
     private productsService: ProductsService
   ) { }
   
+  @Get()
+  async getProductsByBuyer() {
+    return await this.productsService.getProductsByBuyer()
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post()

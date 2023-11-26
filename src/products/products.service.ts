@@ -98,7 +98,11 @@ export class ProductsService {
   
 
   async getProductsByBuyer() {
-    
+    const products = await this.productModel.find({'is_available': true}).populate('vendor')
+    if (!products.length) {
+      throw new HttpException("No products available", HttpStatus.NOT_FOUND)
+    }
+    return products
   }
 
 
