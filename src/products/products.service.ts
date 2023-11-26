@@ -77,7 +77,14 @@ export class ProductsService {
   }
 
 
-  async deleteMyProducts() { }
+  async deleteMyProducts(user: User) { 
+    const currentUser = await this.usersService.getUserByEmail(user.email)
+    await this.productModel.deleteMany({ 'vendor': currentUser._id })
+    return {
+      statusCode: HttpStatus.NO_CONTENT,
+      message: "Products deleted"
+    }
+  }
   
 
   async deleteMyProduct(product_id: string, user: User) { 

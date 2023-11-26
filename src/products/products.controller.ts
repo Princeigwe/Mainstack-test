@@ -44,6 +44,13 @@ export class ProductsController {
 
 
   @UseGuards(JwtAuthGuard)
+  @Delete('my-products')
+  async deleteMyProducts(@Request() request) {
+    const user = request.user
+    return await this.productsService.deleteMyProducts(user)
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('my-products/:product_id')
   async deleteMyProduct(@Param('product_id') product_id: string, @Request() request) {
     const user = request.user
