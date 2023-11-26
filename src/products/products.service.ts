@@ -98,7 +98,7 @@ export class ProductsService {
   
 
   async getProductsByBuyer() {
-    const products = await this.productModel.find({'is_available': true}).populate('vendor')
+    const products = await this.productModel.find({'is_available': true}).populate({ 'path': 'vendor', 'select': '-password -email -username' }) //populate vendor document but exclude password, email, username fields
     if (!products.length) {
       throw new HttpException("No products available", HttpStatus.NOT_FOUND)
     }

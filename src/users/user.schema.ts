@@ -1,5 +1,6 @@
 import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose";
 import { Document, SchemaTypes } from "mongoose";
+import { ExcludeProperty } from 'nestjs-mongoose-exclude'
 
 export type UserDocument = User & Document
 
@@ -17,6 +18,7 @@ export class User{
   @Prop({ type: SchemaTypes.String })
   username: string
 
+  @ExcludeProperty()
   @Prop({ type: SchemaTypes.String })
   password: string
 }
