@@ -64,9 +64,12 @@ describe('ProductsController', () => {
     }
     }),
     
-    getMyProducts: jest.fn((user: User, is_available?: boolean) => { }),
-    
-    deleteMyProducts: jest.fn((user: User) => { }),
+    deleteMyProducts: jest.fn((user: User) => { 
+      return {
+        "statusCode": 204,
+        "message": "Products deleted"
+    }
+    }),
     
     getProductsByBuyer: jest.fn(() => { }),
     
@@ -121,7 +124,11 @@ describe('ProductsController', () => {
     expect( await controller.editProduct(product_id, mockRequest, body) ).toEqual( mockProductService.editProduct(user, product_id, body.title, body.description) )
   });
 
-  it('should return message of deleted products', async() => { });
+  it('should return message of deleted products', async () => { 
+    const user = { first_name: 'test', last_name: 'user3', email: 'testuser3@gmail.com', username: 'testuser3', password: 'testpass123' }
+    const mockRequest = {} as Request
+    expect( await controller.deleteMyProducts(mockRequest) ).toEqual( mockProductService.deleteMyProducts(user) ) 
+  });
 
   it('should return all available products fetched by any user acting as aa buyer', async () => { });
 
