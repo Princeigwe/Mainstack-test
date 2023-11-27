@@ -43,7 +43,26 @@ describe('ProductsController', () => {
     }
     }),
     
-    editProduct: jest.fn((user: User, product_id: string, title?: string, description?: string, price?: number, is_available?: boolean) => { }),
+    editProduct: jest.fn((user: User, product_id: string, title?: string, description?: string, price?: number, is_available?: boolean) => {
+      title = "Adjustable table"
+      description = "Work at any height and position"
+      price = 90000
+      is_available = false
+      product_id = "54321o"
+
+      return {
+        "message": "Product Updated",
+        "data": {
+            "_id": product_id,
+            "title": title,
+            "description": description,
+            "price": price,
+            "is_available": is_available,
+            "vendor": "12345g",
+            "__v": 0
+        }
+    }
+    }),
     
     getMyProducts: jest.fn((user: User, is_available?: boolean) => { }),
     
@@ -89,7 +108,18 @@ describe('ProductsController', () => {
     expect( await controller.getProductByVendor(product_id, mockRequest) ).toEqual( mockProductService.getProductByVendor(product_id, user) )
   });
 
-  it('should return edited product details', async () => { });
+  it('should return edited product details', async () => { 
+    const body = {
+      title : "Adjustable table",
+      description : "Work at any height and position",
+      price : 90000,
+      is_available : false,
+    }
+    const product_id = "54321o"
+    let mockRequest = {} as Request
+    const user = { first_name: 'test', last_name: 'user3', email: 'testuser3@gmail.com', username: 'testuser3', password: 'testpass123' }
+    expect( await controller.editProduct(product_id, mockRequest, body) ).toEqual( mockProductService.editProduct(user, product_id, body.title, body.description) )
+  });
 
   it('should return message of deleted products', async() => { });
 
