@@ -12,6 +12,10 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Install Dependencies
+          command: npm install
+      
+      - run:
           name: npm update
           command: npm install -g npm@latest
       - run:
