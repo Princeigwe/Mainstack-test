@@ -71,7 +71,24 @@ describe('ProductsController', () => {
     }
     }),
     
-    getProductsByBuyer: jest.fn(() => { }),
+    getProductsByBuyer: jest.fn(() => { 
+      return [
+        {
+            "_id": "54321o",
+            "title": "Adjustable table",
+            "description": "Work at any height and position",
+            "price": 90000,
+            "is_available": true,
+            "vendor": {
+                "_id": "12345g",
+                "first_name": "test",
+                "last_name": "user3",
+                "__v": 0
+            },
+            "__v": 0
+        }
+    ]
+    }),
     
   }
 
@@ -130,6 +147,8 @@ describe('ProductsController', () => {
     expect( await controller.deleteMyProducts(mockRequest) ).toEqual( mockProductService.deleteMyProducts(user) ) 
   });
 
-  it('should return all available products fetched by any user acting as aa buyer', async () => { });
+  it('should return all available products fetched by any user acting as aa buyer', async () => { 
+    expect(await controller.getProductsByBuyer()).toEqual(mockProductService.getProductsByBuyer())
+  });
 
 });
