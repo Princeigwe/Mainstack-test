@@ -1,0 +1,41 @@
+version: 2.1
+jobs:
+  build-test-and-deploy:
+    docker:
+      - image: cimg/node:19.8.1
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+    
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: npm update
+          command: sudo npm install -g npm@latest
+      - run:
+          name: install jest framework
+          command: sudo npm install -save-dev jest ts-jest
+      - run:
+          name: run unit tests
+          command: npm run test
+      
+      - when:
+          condition:
+            equal: [main, << pipeline.git.branch >>]
+          steps:
+            - run:
+                name: build and push Docker image
+                command: |
+                  docker build -t $DOCKERHUB_USERNAME/mainstack-test:latest .
+                  docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
+                  docker push $DOCKERHUB_USERNAME/mainstack-test:latest
+
+
+
+workflows:
+  mainstack-test-deploy:
+    jobs:
+      - build-test-and-deploy:
+          context: DOCKERHUB_AUTH
