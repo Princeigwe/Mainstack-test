@@ -16,7 +16,7 @@ jobs:
           command: sudo npm install -g npm@latest
       - run:
           name: install jest framework
-          command: sudo npm install -save-dev jest ts-jest
+          command: sudo npm install -save-dev jest ts-jest 
       - run:
           name: run unit tests
           command: npm run test
